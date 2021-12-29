@@ -11,7 +11,13 @@ paths:
     get:
       tags:
       - OIDC API
+      description: get OIDC ponit info
       operationId: RootController.GetOidcDiscovery
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/object.OidcDiscovery'
   /api/add-application:
     post:
       tags:
@@ -76,6 +82,24 @@ paths:
       tags:
       - Resource API
       operationId: ApiController.AddResource
+  /api/add-syncer:
+    post:
+      tags:
+      - Syncer API
+      description: add syncer
+      operationId: ApiController.AddSyncer
+      parameters:
+      - in: body
+        name: body
+        description: The details of the syncer
+        required: true
+        schema:
+          $ref: '#/definitions/object.Syncer'
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
   /api/add-token:
     post:
       tags:
@@ -200,7 +224,13 @@ paths:
     get:
       tags:
       - OIDC API
-      operationId: RootController.GetOidcCert
+      description: get OIDC ponit jose-json-web-key
+      operationId: RootController.get OIDC point
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/docs.OidcCert'
   /api/check-ldap-users-exist:
     post:
       tags:
@@ -275,6 +305,24 @@ paths:
       tags:
       - Resource API
       operationId: ApiController.DeleteResource
+  /api/delete-syncer:
+    post:
+      tags:
+      - Syncer API
+      description: delete syncer
+      operationId: ApiController.DeleteSyncer
+      parameters:
+      - in: body
+        name: body
+        description: The details of the syncer
+        required: true
+        schema:
+          $ref: '#/definitions/object.Syncer'
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
   /api/delete-token:
     post:
       tags:
@@ -580,6 +628,42 @@ paths:
             type: array
             items:
               $ref: '#/definitions/object.User'
+  /api/get-syncer:
+    get:
+      tags:
+      - Syncer API
+      description: get syncer
+      operationId: ApiController.GetSyncer
+      parameters:
+      - in: query
+        name: id
+        description: The id of the syncer
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/object.Syncer'
+  /api/get-syncers:
+    get:
+      tags:
+      - Syncer API
+      description: get syncers
+      operationId: ApiController.GetSyncers
+      parameters:
+      - in: query
+        name: owner
+        description: The owner of syncers
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/object.Syncer'
   /api/get-token:
     get:
       tags:
@@ -830,6 +914,41 @@ paths:
           description: The Response object
           schema:
             $ref: '#/definitions/object.TokenWrapper'
+  /api/login/oauth/refresh_token:
+    post:
+      description: refresh OAuth access token
+      operationId: ApiController.RefreshToken
+      parameters:
+      - in: query
+        name: grant_type
+        description: OAuth grant type
+        required: true
+        type: string
+      - in: query
+        name: refresh_token
+        description: OAuth refresh token
+        required: true
+        type: string
+      - in: query
+        name: scope
+        description: OAuth scope
+        required: true
+        type: string
+      - in: query
+        name: client_id
+        description: OAuth client id
+        required: true
+        type: string
+      - in: query
+        name: client_secret
+        description: OAuth client secret
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/object.TokenWrapper'
   /api/logout:
     post:
       tags:
@@ -1024,6 +1143,29 @@ paths:
       tags:
       - Resource API
       operationId: ApiController.UpdateResource
+  /api/update-syncer:
+    post:
+      tags:
+      - Syncer API
+      description: update syncer
+      operationId: ApiController.UpdateSyncer
+      parameters:
+      - in: query
+        name: id
+        description: The id of the syncer
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: The details of the syncer
+        required: true
+        schema:
+          $ref: '#/definitions/object.Syncer'
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
   /api/update-token:
     post:
       tags:
@@ -1099,10 +1241,10 @@ paths:
       - Resource API
       operationId: ApiController.UploadResource
 definitions:
-  1713.0xc000393f50.false:
+  1793.0xc00031c8d0.false:
     title: "false"
     type: object
-  1747.0xc000393f80.false:
+  1827.0xc00031c900.false:
     title: "false"
     type: object
   RequestForm:
@@ -1116,28 +1258,64 @@ definitions:
     type: object
     properties:
       data:
-        $ref: '#/definitions/1713.0xc000393f50.false'
+        $ref: '#/definitions/1793.0xc00031c8d0.false'
       data2:
-        $ref: '#/definitions/1747.0xc000393f80.false'
+        $ref: '#/definitions/1827.0xc00031c900.false'
       msg:
         type: string
       status:
+        type: string
+      sub:
         type: string
   controllers.api_controller.Response:
     title: Response
     type: object
     properties:
       data:
-        $ref: '#/definitions/1713.0xc000393f50.false'
+        $ref: '#/definitions/1793.0xc00031c8d0.false'
       data2:
-        $ref: '#/definitions/1747.0xc000393f80.false'
+        $ref: '#/definitions/1827.0xc00031c900.false'
       msg:
         type: string
       status:
         type: string
+      sub:
+        type: string
+  docs.OidcCert:
+    title: OidcCert
+    type: object
+    properties:
+      keys:
+        type: array
+        items:
+          $ref: '#/definitions/docs.OidcCertKey'
+  docs.OidcCertKey:
+    title: OidcCertKey
+    type: object
+    properties:
+      e:
+        type: string
+      kty:
+        type: string
+      "n":
+        type: string
+      x5c:
+        type: string
   emailForm:
     title: emailForm
     type: object
+  object.Adapter:
+    title: Adapter
+    type: object
+    properties:
+      Engine:
+        $ref: '#/definitions/xorm.Engine'
+      dataSourceName:
+        type: string
+      dbName:
+        type: string
+      driverName:
+        type: string
   object.Application:
     title: Application
     type: object
@@ -1185,6 +1363,9 @@ definitions:
         type: array
         items:
           type: string
+      refreshExpireInHours:
+        type: integer
+        format: int64
       signinHtml:
         type: string
       signinUrl:
@@ -1198,6 +1379,56 @@ definitions:
       signupUrl:
         type: string
       termsOfUse:
+        type: string
+      tokenFormat:
+        type: string
+  object.OidcDiscovery:
+    title: OidcDiscovery
+    type: object
+    properties:
+      authorization_endpoint:
+        type: string
+      claims_supported:
+        type: array
+        items:
+          type: string
+      grant_types_supported:
+        type: array
+        items:
+          type: string
+      id_token_signing_alg_values_supported:
+        type: array
+        items:
+          type: string
+      issuer:
+        type: string
+      jwks_uri:
+        type: string
+      request_object_signing_alg_values_supported:
+        type: array
+        items:
+          type: string
+      request_parameter_supported:
+        type: boolean
+      response_modes_supported:
+        type: array
+        items:
+          type: string
+      response_types_supported:
+        type: array
+        items:
+          type: string
+      scopes_supported:
+        type: array
+        items:
+          type: string
+      subject_types_supported:
+        type: array
+        items:
+          type: string
+      token_endpoint:
+        type: string
+      userinfo_endpoint:
         type: string
   object.Organization:
     title: Organization
@@ -1239,7 +1470,11 @@ definitions:
         type: string
       clientId:
         type: string
+      clientId2:
+        type: string
       clientSecret:
+        type: string
+      clientSecret2:
         type: string
       content:
         type: string
@@ -1249,9 +1484,19 @@ definitions:
         type: string
       domain:
         type: string
+      enableSignAuthnRequest:
+        type: boolean
       endpoint:
         type: string
       host:
+        type: string
+      idP:
+        type: string
+      intranetEndpoint:
+        type: string
+      issuerUrl:
+        type: string
+      metadata:
         type: string
       method:
         type: string
@@ -1309,6 +1554,64 @@ definitions:
         type: string
       visible:
         type: boolean
+  object.Syncer:
+    title: Syncer
+    type: object
+    properties:
+      affiliationTable:
+        type: string
+      avatarBaseUrl:
+        type: string
+      createdTime:
+        type: string
+      database:
+        type: string
+      host:
+        type: string
+      isEnabled:
+        type: boolean
+      name:
+        type: string
+      organization:
+        type: string
+      owner:
+        type: string
+      password:
+        type: string
+      port:
+        type: integer
+        format: int64
+      syncInterval:
+        type: integer
+        format: int64
+      table:
+        type: string
+      tableColumns:
+        type: array
+        items:
+          $ref: '#/definitions/object.TableColumn'
+      tablePrimaryKey:
+        type: string
+      type:
+        type: string
+      user:
+        type: string
+  object.TableColumn:
+    title: TableColumn
+    type: object
+    properties:
+      casdoorName:
+        type: string
+      isHashed:
+        type: boolean
+      name:
+        type: string
+      type:
+        type: string
+      values:
+        type: array
+        items:
+          type: string
   object.Token:
     title: Token
     type: object
@@ -1329,6 +1632,8 @@ definitions:
       organization:
         type: string
       owner:
+        type: string
+      refreshToken:
         type: string
       scope:
         type: string
@@ -1361,7 +1666,11 @@ definitions:
           type: string
       affiliation:
         type: string
+      apple:
+        type: string
       avatar:
+        type: string
+      azuread:
         type: string
       bio:
         type: string
@@ -1456,6 +1765,8 @@ definitions:
         format: int64
       signupApplication:
         type: string
+      slack:
+        type: string
       tag:
         type: string
       title:
@@ -1492,4 +1803,7 @@ definitions:
         type: string
   smsForm:
     title: smsForm
+    type: object
+  xorm.Engine:
+    title: Engine
     type: object
