@@ -27,3 +27,6 @@ files/
 lastupdate.tmp
 commentsRouter*.go
 vendor/
+
+## debug gen bin file
+casdoor
